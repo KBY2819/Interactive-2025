@@ -4,6 +4,12 @@
     position: relative;
 }
 
+.inClass {
+    margin-top: 20px;
+    width: 800px;
+    height: auto;
+}
+
 .mainImage1 {
     width: 400px;
     height: 400px;
@@ -31,7 +37,7 @@ h4 {
     justify-content: flex-end;
     width: 800px;
     margin-top: 40px;
-    margin-bottom: 180px;
+    margin-bottom: 250px;
     
 }
 
