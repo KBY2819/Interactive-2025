@@ -23,7 +23,7 @@ body {
 
 .circleC:hover {
     background-color: rgb(255, 193, 170);
-    animation: scaleDown 8s alternate-reverse;
+    animation: scaleDown 8s alternate;
 }
 
 @keyframes scaleDown {
