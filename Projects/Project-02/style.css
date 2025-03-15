@@ -158,6 +158,27 @@
         height: 50px; 
     }
 
+    .albumCover {
+        width: 15%;
+    }
+
+    .transcription {
+        width: 50%;
+    }
+
+    .journalContent {
+        width: 30%;
+    }
+
+    .journalContent h3 {
+        font-size: 14px;
+        font-family: Arial, Helvetica, sans-serif;
+    }
+
+    .journalContent p {
+        font-size: 9px;
+    }
+
     * {
         overflow: visible !important;
     }
