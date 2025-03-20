@@ -141,7 +141,7 @@
 
     .right {
         width: 100%;
-        border: orange 1px solid;
+        /* border: orange 1px solid; */
         background-color: transparent;
         padding: 0;
         margin-top: 0px;
@@ -153,13 +153,13 @@
         display: block;
         overflow: visible;
         height: auto;
-        border: green 1px solid;
-        margin-top: 40px;
+        /* border: green 1px solid; */
+        margin-top: 50px;
     }
 
     .items {
         page-break-inside: avoid;
-        border: yellowgreen 1px solid;
+        /* border: yellowgreen 1px solid; */
     }
         .items:nth-child(n) {
         break-before: auto;
@@ -188,7 +188,7 @@
         font-family: Arial, Helvetica, sans-serif;
     }
 
-    .journalContent .audio-container {
+    .audio-container {
         visibility: hidden;
     }
 
