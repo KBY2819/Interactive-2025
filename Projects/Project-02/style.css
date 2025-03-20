@@ -67,6 +67,11 @@
     
 }
 
+.items {
+    padding: 20px;
+    border-bottom: 1px solid #ddd;
+}
+
 .albumCover {
     width: 10vw;
     height: auto;
@@ -95,15 +100,11 @@
     height: auto;
     display: inline-block;
     align-content: baseline;
-}
-
-.items {
-    padding: 20px;
-    border-bottom: 1px solid #ddd;
-}
-
-.journalContent {
     padding: 5px;
+}
+
+.audio-container {
+    text-align: right;
 }
 
 .journalContent h3 {
