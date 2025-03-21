@@ -78,7 +78,7 @@ body {
 .candle {
 	position: absolute;
 	top: 140px;
-	left: 315px;
+	left: 305px;
 	width: 220px;
 	height: 220px;
 	z-index: 2;
@@ -268,8 +268,8 @@ body {
 	position: absolute;
 	top: 275px;
 	left: 510px;
-	width: 150px;
-	height: 230px;
+	width: 180px;
+	height: 100px;
 	z-index: 15;
 }
 
@@ -339,4 +339,72 @@ body {
 	top: 40px;
 	left: 0px;
 	z-index: 17;
+}
+
+.bottle, .candle, .cat, .box {
+	transition: transform 0.3s ease, filter 0.3s ease, opacity 0.3s ease;
+}
+  
+.bottle:hover,
+.candle:hover,
+.cat:hover,
+.box:hover {
+	transform: scale(1.15);
+	filter: brightness(0.8);
+	opacity: 0.9;
+}
+
+.cat:active .cat-ear,
+.cat:active .cat-foot1,
+.cat:active .cat-foot2 {
+  animation: shake-rotate 0.6s ease;
+}
+
+.cat:active .cat-tail {
+	animation: tail-shake 0.6s ease;
+}
+
+@keyframes shake-rotate {
+	0%   { transform: rotate(0deg); }
+	25%  { transform: rotate(8deg); }
+	50%  { transform: rotate(-8deg); }
+	75%  { transform: rotate(8deg); }
+	100% { transform: rotate(0deg); }
+}
+
+@keyframes tail-shake {
+	0%   { transform: rotate(-110deg); }
+	25%  { transform: rotate(-100deg); }
+	50%  { transform: rotate(-120deg); }
+	75%  { transform: rotate(-100deg); }
+	100% { transform: rotate(-110deg); }
+}
+
+.candle:active .c-b1 {
+	transform: translate(-10px, -10px);
+	transition: transform 0.3s ease;
+}
+  .candle:active .c-b2 {
+	transform: translate(-15px, -5px);
+	transition: transform 0.3s ease;
+}
+  .candle:active .c-b3 {
+	transform: translate(-20px, -10px);
+	transition: transform 0.3s ease;
+}
+  .candle:active .c-b4 {
+	transform: translate(15px, -10px);
+	transition: transform 0.3s ease;
+}
+  .candle:active .c-b5 {
+	transform: translate(20px, -5px);
+	transition: transform 0.3s ease;
+}
+  .candle:active .c-b6 {
+	transform: translate(10px, 10px);
+	transition: transform 0.3s ease;
+}
+  
+.c-b1, .c-b2, .c-b3, .c-b4, .c-b5, .c-b6 {
+	transition: transform 0.3s ease;
 }
