@@ -30,19 +30,28 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    text-align: right;
     color: white;
     scroll-snap-align: start;
+}
+
+.section h2 {
+    font-family: "Playfair Display SC", serif;
+    font-weight: 700;
+    font-size: 64px;
+    font-style: normal;
+    margin-right: 50px;
 }
 
 #Autumn-Leaves {
     background-color: #be9572;
 }
 
-#Summertime {
+#So-What {
     background-color: #8b8c64;
 }
 
-#Without-a-Song {
+#Chitlins-Con-Carne {
     background-color: #3187b9;
 }
 
@@ -65,6 +74,11 @@
     height: 100%;
     overflow-y: auto; 
     
+}
+
+.items {
+    padding: 20px;
+    border-bottom: 1px solid #ddd;
 }
 
 .albumCover {
@@ -95,11 +109,24 @@
     height: auto;
     display: inline-block;
     align-content: baseline;
+    padding: 5px;
 }
 
-.items {
-    padding: 20px;
-    border-bottom: 1px solid #ddd;
+.audio-container {
+    text-align: right;
+}
+
+.journalContent h3 {
+    text-align: right;
+}
+
+.journalContent p {
+    
+    font-family: "Outfit", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 300;
+    font-style: normal;
+  
 }
 
 @media print {
@@ -128,7 +155,7 @@
 
     .right {
         width: 100%;
-        border: orange 1px solid;
+        /* border: orange 1px solid; */
         background-color: transparent;
         padding: 0;
         margin-top: 0px;
@@ -140,13 +167,13 @@
         display: block;
         overflow: visible;
         height: auto;
-        border: green 1px solid;
-        margin-top: 40px;
+        /* border: green 1px solid; */
+        margin-top: 50px;
     }
 
     .items {
         page-break-inside: avoid;
-        border: yellowgreen 1px solid;
+        /* border: yellowgreen 1px solid; */
     }
         .items:nth-child(n) {
         break-before: auto;
@@ -173,6 +200,10 @@
     .journalContent h3 {
         font-size: 14px;
         font-family: Arial, Helvetica, sans-serif;
+    }
+
+    .audio-container {
+        visibility: hidden;
     }
 
     .journalContent p {
