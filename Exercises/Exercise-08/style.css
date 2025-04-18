@@ -1,0 +1,53 @@
+body {
+    margin: 0;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
+  }
+
+.imageContainer {
+    width: 800px;
+    height: 800px;
+    background-image: url('images/full.png');
+    background-color: black;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: contain;
+}
+
+@media only screen and (min-width : 768px) and (max-width : 1024px) {
+
+    .imageContainer {
+        width: 600px;
+        height: 600px;
+        background-image: url('images/smallScreen.png');
+        background-color: beige;
+        background-position: center;
+    }
+  
+  }
+  
+  @media screen and (max-width: 768px) {
+
+    .imageContainer {
+        width: 400px;
+        height: 400px;
+        background-image: url('images/tab.png');
+        background-color: rgb(155, 32, 32);
+        background-position: center;
+    }
+  
+  }
+
+  @media (max-width: 480px) {
+
+    .imageContainer {
+        width: 200px;
+        height: 200px;
+        background-image: url('images/phone.png');
+        background-color: white;
+        background-position: center;
+    }
+  }
