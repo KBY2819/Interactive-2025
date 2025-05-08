@@ -1,0 +1,50 @@
+body {
+    font-family: sans-serif;
+    padding: 2rem;
+  }
+  
+  .calendar-wrapper {
+    position: relative;
+    width: 100%;
+  }
+  
+  .calendar-inner {
+    width: 80%;
+    margin: 0 auto;
+    position: relative;
+  }
+  
+  .path-layer {
+    position: absolute;
+    top: -45px;
+    left: 10%;
+    width: 80%;
+    overflow: visible;
+    pointer-events: none;
+    z-index: 1;
+
+  }
+  
+  .calendar {
+    display: grid;
+    gap: 50px 10px; 
+    width: 100%;
+  }
+  
+  .day {
+    background: white;
+    aspect-ratio: 1 / 1;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid rgba(0, 0, 0, 1);
+    font-weight: bold;
+    z-index: 2;
+  }
+
+  .day {
+    width: 40px;
+    height: 40px;
+    font-size: 0.8rem;
+  }
