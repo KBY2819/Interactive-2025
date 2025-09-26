@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>iPhone Photographic Styles – iOS-like 11×11 Pads with Defaults</title>
+<style>
+  :root{
+    --bg:#0c0c0c; --card:#141414; --text:#f2f2f2; --sub:#bcbcbc; --muted:#9a9a9a;
+    --grid:#2e2e2e; --grid-dim:#282828;
+    --pad-size:300px; --dot:6px; --dot-center:11px; --target:20px; --hl-dot:8px; --def-dot:10px;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--text);font:16px/1.6 system-ui,-apple-system,Segoe UI,Roboto,Inter,Helvetica,Arial}
+  .wrap{max-width:920px;margin:20px auto;padding:12px}
+  .card{background:var(--card);border-radius:20px;padding:20px 20px 24px;margin:14px 0;box-shadow:0 6px 30px rgba(0,0,0,.25)}
+  h2{margin:.2em 0 .2em;font-size:22px}
+  h3{margin:0 0 10px;font-size:16px;color:var(--sub);font-weight:600}
+  .row{display:flex;gap:18px;flex-wrap:wrap}
+  .col{flex:1 1 280px;min-width:260px}
+  .pill{display:inline-block;padding:6px 10px;border-radius:999px;background:#1e1e1e;color:var(--sub);font-size:13px;margin-right:8px}
+  ul{margin:8px 0 0 18px;padding:0}  li{margin:4px 0}
+  .label{font-size:13px;color:var(--muted);margin-top:6px}
+  .tip{color:#9a9a9a;font-size:13px;margin-top:8px}
+
+  /* iOS-like Pad */
+  .pad-wrap{
+    --pad-bg:#121212; /* per-card override */
+    position:relative;width:var(--pad-size);height:var(--pad-size);
+    border-radius:16px;border:1px solid #2a2a2a;margin-top:8px;overflow:hidden;
+    /* 更鲜明的底色（亮度提升 + 色相更清晰） */
+    background:
+      radial-gradient(120% 120% at 50% 50%, rgba(255,255,255,.05), rgba(0,0,0,.00) 60%),
+      var(--pad-bg);
+  }
+  .pad-wrap::after{content:"";position:absolute;inset:0;border-radius:16px;
+    box-shadow:inset 0 0 0 1px rgba(255,255,255,.04), inset 0 0 48px rgba(0,0,0,.28);pointer-events:none}
+
+  .pad{position:absolute;inset:0}
+
+  /* 基础点阵 */
+  .dot{position:absolute;width:var(--dot);height:var(--dot);border-radius:50%;
+       background:var(--grid-dim);opacity:.85;transform:translate(-50%,-50%)}
+  /* 十字线高亮（落点所在 X/Y 列） */
+  .dot.hl{width:var(--hl-dot);height:var(--hl-dot);background:#fafafa;opacity:.95;
+          box-shadow:0 0 0 2px rgba(255,255,255,.10)}
+  /* 中心 (0,0) 空心点 */
+  .dot.center{width:var(--dot-center);height:var(--dot-center);background:transparent;
+              border:2px solid #9a9a9a;opacity:.95}
+  /* 默认落点：小、比普通点亮（但弱于十字线与大白点） */
+  .dot.default{width:var(--def-dot);height:var(--def-dot);background:#eaeaea;opacity:.92;
+               box-shadow:0 0 0 2px rgba(255,255,255,.12)}
+  /* 最终落点：大号实心白点 */
+  .target{position:absolute;width:var(--target);height:var(--target);border-radius:50%;
+          background:#fff;box-shadow:0 6px 18px rgba(0,0,0,.35),0 0 0 3px rgba(255,255,255,.25);
+          transform:translate(-50%,-50%);z-index:5}
+
+  /* 强度条 */
+  .bar{height:14px;background:#232323;border-radius:999px;overflow:hidden}
+  .fill{height:100%;background:linear-gradient(90deg,#ffffff,#c7d8ff);
+        box-shadow:inset 0 0 0 1px rgba(255,255,255,.18);width:0}
+</style>
+<body>
+<div class="wrap">
+
+  <script>
+    const STEP = 10; // 11点 -> 10间隔 -> 每格10%
+    const pctX = x => 50 + x*STEP; // x: 左负 右正
+    const pctY = y => 50 - y*STEP; // y: 上正 下负
+
+    function buildPad(padId, padColor, finalX, finalY, defX, defY){
+      const pad = document.getElementById(padId);
+      if(!pad) return;
+      const wrap = pad.parentElement;
+      if(wrap) wrap.style.setProperty('--pad-bg', padColor);
+
+      // 11×11 点阵
+      for(let iy=-5; iy<=5; iy++){
+        for(let ix=-5; ix<=5; ix++){
+          const d = document.createElement('div');
+          d.className = 'dot';
+          if(ix===0 && iy===0) d.classList.add('center');
+          if(ix===finalX || iy===finalY) d.classList.add('hl');   // 十字线
+          d.style.left = `calc(${pctX(ix)}% )`;
+          d.style.top  = `calc(${pctY(iy)}% )`;
+          pad.appendChild(d);
+        }
+      }
+      // 默认落点（小亮点）
+      if(defX!==undefined && defY!==undefined){
+        const df = document.createElement('div');
+        df.className = 'dot default';
+        df.style.left = `calc(${pctX(defX)}% )`;
+        df.style.top  = `calc(${pctY(defY)}% )`;
+        pad.appendChild(df);
+      }
+      // 最终落点（大白点）
+      const t = document.createElement('div');
+      t.className='target';
+      t.style.left=`calc(${pctX(finalX)}% )`;
+      t.style.top =`calc(${pctY(finalY)}% )`;
+      pad.appendChild(t);
+    }
+
+    function setStrength(barId, pct){
+      const bar = document.getElementById(barId);
+      if(!bar) return;
+      const fill = bar.querySelector('.fill');
+      if(fill) fill.style.width = pct + '%';
+    }
+
+    document.addEventListener('DOMContentLoaded',()=>{
+      /* 颜色更鲜明的 pad 背景（每卡独立） */
+      const BG = {
+        quiet:   'linear-gradient(180deg,#1a2332,#12151c)',   // 冷蓝
+        dramatic:'linear-gradient(180deg,#1d1719,#121013)',   // 暖红棕
+        natural: 'linear-gradient(180deg,#171717,#121212)',   // 中性灰
+        vibrant: 'linear-gradient(180deg,#2a1c11,#14100c)',   // 暖橙
+        luminous:'linear-gradient(180deg,#112227,#0f1719)',   // 清透青
+        bw:      'linear-gradient(180deg,#151515,#101010)',   // 黑白
+        sony:    'linear-gradient(180deg,#121825,#0f141f)'    // 冷蓝
+      };
+
+      /* === 构建 10 张卡：buildPad(padId, bg, finalX,finalY, defaultX,defaultY) & setStrength === */
+      // Fujifilm
+      buildPad('p1', BG.quiet,   -1,+1,  -1,-1); setStrength('s1',55); // Classic Chrome: Final(-1,+1), Default≈(-1,-1)
+      buildPad('p2', BG.dramatic,-1,+1,   0,+1); setStrength('s2',60); // Classic Negative: Final(-1,+1), Default≈(0,+1)
+      buildPad('p3', BG.natural, +1,-1,   0, 0); setStrength('s3',50); // Astia/ProNegHi: Final(+1,-1), Default≈(0,0)
+      buildPad('p4', BG.vibrant,  0,+2,   0,+1); setStrength('s4',72); // Velvia: Final(0,+2), Default≈(0,+1)
+
+      // Kodak Portra
+      buildPad('p5', BG.natural, +2,-2,   0, 0); setStrength('s5',47); // Portra160: Final(+2,-2), Default≈(0,0)
+      buildPad('p6', BG.dramatic,+1,-1,   0,+1); setStrength('s6',58); // Portra400: Final(+1,-1), Default≈(0,+1)
+
+      // Hasselblad
+      buildPad('p7', BG.luminous,-1,+1,   0,+1); setStrength('s7',55); // NCS/Luminous: Final(-1,+1), Default≈(0,+1)
+
+      // Leica
+      buildPad('p8', BG.dramatic,+2,+1,   0,+1); setStrength('s8',63); // Leica Color: Final(+2,+1), Default≈(0,+1)
+      buildPad('p9', BG.bw,       0,+2,   0,+1); setStrength('s9',68); // Leica B&W (Stark): Final(0,+2), Default≈(0,+1)
+
+      // Sony
+      buildPad('p10',BG.sony,    -1, 0,   0, 0); setStrength('s10',55); // Sony Modern/Natural: Final(-1,0), Default≈(0,0)
+    });
+  </script>
+
+  <!-- ===== 1 ===== -->
+  <div class="card">
+    <h2>Fujifilm — Classic Chrome</h2><h3>Mood: Quiet</h3>
+    <div class="row"><div class="col">
+      <span class="pill">Pad (−5…+5)</span>
+      <div class="pad-wrap"><div class="pad" id="p1"></div></div>
+      <div class="label">Final: up 1, left 1 → (X −1, Y +1) · Default ≈ (−1, −1)</div>
+      <div style="height:12px"></div><span class="pill">Strength</span>
+      <div class="bar" id="s1"><div class="fill"></div></div><div class="label">≈ 55%</div>
+    </div><div class="col">
+      <span class="pill">Edit (Photos app)</span>
+      <ul><li>Highlights −25</li><li>Shadows +10</li><li>Contrast +8</li>
+          <li>Vibrance −10</li><li>Saturation −8</li><li>Warmth −5</li>
+          <li>Tint −3</li><li>Definition +6</li><li>Vignette +10</li></ul>
+      <div class="tip">Cool, muted documentary tonality.</div>
+    </div></div>
+  </div>
+
+  <!-- ===== 2 ===== -->
+  <div class="card">
+    <h2>Fujifilm — Classic Negative</h2><h3>Mood: Dramatic</h3>
+    <div class="row"><div class="col">
+      <span class="pill">Pad (−5…+5)</span>
+      <div class="pad-wrap"><div class="pad" id="p2"></div></div>
+      <div class="label">Final: up 1, left 1 → (X −1, Y +1) · Default ≈ (0, +1)</div>
+      <span class="pill" style="margin-top:10px;display:inline-block;">Strength</span>
+      <div class="bar" id="s2"><div class="fill"></div></div><div class="label">≈ 60%</div>
+    </div><div class="col">
+      <span class="pill">Edit (Photos app)</span>
+      <ul><li>Highlights −20</li><li>Black Point +8</li><li>Contrast +15</li>
+          <li>Saturation −6</li><li>Warmth +6</li><li>Tint −6</li>
+          <li>Definition +8</li><li>Vignette +12</li></ul>
+      <div class="tip">Teal-leaning shadows with strong contrast.</div>
+    </div></div>
+  </div>
+
+  <!-- ===== 3 ===== -->
+  <div class="card">
+    <h2>Fujifilm — Astia / Pro Neg Hi</h2><h3>Mood: Natural</h3>
+    <div class="row"><div class="col">
+      <span class="pill">Pad (−5…+5)</span>
+      <div class="pad-wrap"><div class="pad" id="p3"></div></div>
+      <div class="label">Final: down 1, right 1 → (X +1, Y −1) · Default ≈ (0, 0)</div>
+      <span class="pill">Strength</span><div class="bar" id="s3"><div class="fill"></div></div>
+      <div class="label">≈ 50%</div>
+    </div><div class="col">
+      <span class="pill">Edit (Photos app)</span>
+      <ul><li>Highlights −30</li><li>Shadows +15</li><li>Contrast −8</li>
+          <li>Vibrance +8</li><li>Saturation −4</li><li>Warmth +6</li>
+          <li>Tint +4</li><li>Definition +2</li></ul>
+      <div class="tip">Soft contrast with gentle warmth for skin.</div>
+    </div></div>
+  </div>
+
+  <!-- ===== 4 ===== -->
+  <div class="card">
+    <h2>Fujifilm — Velvia</h2><h3>Mood: Vibrant</h3>
+    <div class="row"><div class="col">
+      <span class="pill">Pad (−5…+5)</span>
+      <div class="pad-wrap"><div class="pad" id="p4"></div></div>
+      <div class="label">Final: up 2, center → (X 0, Y +2) · Default ≈ (0, +1)</div>
+      <span class="pill">Strength</span><div class="bar" id="s4"><div class="fill"></div></div>
+      <div class="label">≈ 72%</div>
+    </div><div class="col">
+      <span class="pill">Edit (Photos app)</span>
+      <ul><li>Contrast +10</li><li>Vibrance +18</li><li>Highlights −15</li>
+          <li>Shadows +8</li><li>Warmth +4</li><li>Definition +6</li></ul>
+      <div class="tip">Punchy landscape color—watch the highlights.</div>
+    </div></div>
+  </div>
+
+  <!-- ===== 5 ===== -->
+  <div class="card">
+    <h2>Kodak Portra — 160</h2><h3>Mood: Natural</h3>
+    <div class="row"><div class="col">
+      <span class="pill">Pad (−5…+5)</span>
+      <div class="pad-wrap"><div class="pad" id="p5"></div></div>
+      <div class="label">Final: down 2, right 2 → (X +2, Y −2) · Default ≈ (0, 0)</div>
+      <span class="pill">Strength</span><div class="bar" id="s5"><div class="fill"></div></div>
+      <div class="label">≈ 47%</div>
+    </div><div class="col">
+      <span class="pill">Edit (Photos app)</span>
+      <ul><li>Highlights −35</li><li>Shadows +10</li><li>Contrast −8</li>
+          <li>Vibrance +6</li><li>Saturation −4</li><li>Warmth +8</li>
+          <li>Tint +6</li><li>Black Point +4</li><li>Vignette +8</li></ul>
+      <div class="tip">Pastel skin, gentle contrast.</div>
+    </div></div>
+  </div>
+
+  <!-- ===== 6 ===== -->
+  <div class="card">
+    <h2>Kodak Portra — 400</h2><h3>Mood: Dramatic</h3>
+    <div class="row"><div class="col">
+      <span class="pill">Pad (−5…+5)</span>
+      <div class="pad-wrap"><div class="pad" id="p6"></div></div>
+      <div class="label">Final: down 1, right 1 → (X +1, Y −1) · Default ≈ (0, +1)</div>
+      <span class="pill">Strength</span><div class="bar" id="s6"><div class="fill"></div></div>
+      <div class="label">≈ 58%</div>
+    </div><div class="col">
+      <span class="pill">Edit (Photos app)</span>
+      <ul><li>Highlights −25</li><li>Shadows +8</li><li>Contrast +4</li>
+          <li>Vibrance +10</li><li>Warmth +8</li><li>Tint +5</li>
+          <li>Definition +6</li></ul>
+      <div class="tip">Warm midtones with sturdy contrast.</div>
+    </div></div>
+  </div>
+
+  <!-- ===== 7 ===== -->
+  <div class="card">
+    <h2>Hasselblad — NCS</h2><h3>Mood: Luminous</h3>
+    <div class="row"><div class="col">
+      <span class="pill">Pad (−5…+5)</span>
+      <div class="pad-wrap"><div class="pad" id="p7"></div></div>
+      <div class="label">Final: up 1, left 1 → (X −1, Y +1) · Default ≈ (0, +1)</div>
+      <span class="pill">Strength</span><div class="bar" id="s7"><div class="fill"></div></div>
+      <div class="label">≈ 55%</div>
+    </div><div class="col">
+      <span class="pill">Edit (Photos app)</span>
+      <ul><li>Contrast +6</li><li>Highlights −15</li><li>Shadows +6</li>
+          <li>Vibrance +6 (Saturation 0)</li><li>Warmth +3</li>
+          <li>Tint +2</li><li>Definition +5</li><li>Sharpen +5</li></ul>
+      <div class="tip">Transparent, airy color with clean highlights.</div>
+    </div></div>
+  </div>
+
+  <!-- ===== 8 ===== -->
+  <div class="card">
+    <h2>Leica — Color</h2><h3>Mood: Dramatic</h3>
+    <div class="row"><div class="col">
+      <span class="pill">Pad (−5…+5)</span>
+      <div class="pad-wrap"><div class="pad" id="p8"></div></div>
+      <div class="label">Final: up 1, right 2 → (X +2, Y +1) · Default ≈ (0, +1)</div>
+      <span class="pill">Strength</span><div class="bar" id="s8"><div class="fill"></div></div>
+      <div class="label">≈ 63%</div>
+    </div><div class="col">
+      <span class="pill">Edit (Photos app)</span>
+      <ul><li>Contrast +10</li><li>Highlights −10</li><li>Black Point +6</li>
+          <li>Vibrance +6</li><li>Warmth +6</li><li>Tint +3</li>
+          <li>Definition +10</li><li>Sharpen +8</li><li>Vignette +12</li></ul>
+      <div class="tip">Warm reds with strong micro-contrast and vignette.</div>
+    </div></div>
+  </div>
+
+  <!-- ===== 9 ===== -->
+  <div class="card">
+    <h2>Leica — B&amp;W</h2><h3>Mood: Stark B&amp;W</h3>
+    <div class="row"><div class="col">
+      <span class="pill">Pad (−5…+5)</span>
+      <div class="pad-wrap"><div class="pad" id="p9"></div></div>
+      <div class="label">Final: up 2, center → (X 0, Y +2) · Default ≈ (0, +1)</div>
+      <span class="pill">Strength</span><div class="bar" id="s9"><div class="fill"></div></div>
+      <div class="label">≈ 68%</div>
+    </div><div class="col">
+      <span class="pill">Edit (Photos app)</span>
+      <ul><li>Contrast +6</li><li>Black Point +8</li>
+          <li>Definition +10 <span style="color:#9a9a9a">(add grain in a third-party editor)</span></li></ul>
+      <div class="tip">Hard, graphic mono. Softer alt: Muted B&amp;W ~45% at (X 0, Y −2).</div>
+    </div></div>
+  </div>
+
+  <!-- ===== 10 ===== -->
+  <div class="card">
+    <h2>Sony — Modern</h2><h3>Mood: Natural</h3>
+    <div class="row"><div class="col">
+      <span class="pill">Pad (−5…+5)</span>
+      <div class="pad-wrap"><div class="pad" id="p10"></div></div>
+      <div class="label">Final: left 1, center → (X −1, Y 0) · Default ≈ (0, 0)</div>
+      <span class="pill">Strength</span><div class="bar" id="s10"><div class="fill"></div></div>
+      <div class="label">≈ 55%</div>
+    </div><div class="col">
+      <span class="pill">Edit (Photos app)</span>
+      <ul><li>Contrast +10</li><li>Vibrance +6 (Saturation 0–+2)</li>
+          <li>Highlights −10</li><li>Shadows +6</li>
+          <li>Warmth −3</li><li>Tint +2</li>
+          <li>Definition +8</li><li>Sharpen +8</li></ul>
+      <div class="tip">Clean, slightly cool neutrality; keep saturation restrained.</div>
+    </div></div>
+  </div>
+
+  <div class="tip" style="text-align:center;margin:18px 0 30px">
+    Tip: Use <b>HEIF</b> if you want to switch/adjust styles after shooting.
+    ProRAW/RAW &amp; JPEG (Most Compatible) can’t change styles in Photos.
+  </div>
+
+</div>
+</body>
+</html>
